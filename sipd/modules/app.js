@@ -22,11 +22,17 @@
  * SOFTWARE.
  */
 
-const { By } = require('selenium-webdriver');
+const { By, until } = require('selenium-webdriver');
+const Sipd = require('..');
 const SipdScript = require('../script');
 
 class SipdApp {
 
+    /**
+     * Constructor.
+     *
+     * @param {Sipd} owner The owner
+     */
     constructor(owner) {
         this.owner = owner;
     }

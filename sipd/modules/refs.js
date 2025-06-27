@@ -26,6 +26,7 @@ const fs = require('fs');
 const { glob } = require('glob');
 const path = require('path');
 const Queue = require('@ntlab/work/queue');
+const Sipd = require('..');
 const SipdRefKegiatan = require('./ref/keg');
 const SipdRefRekening = require('./ref/rek');
 
@@ -33,6 +34,11 @@ class SipdRefs {
 
     refs = []
 
+    /**
+     * Constructor.
+     *
+     * @param {Sipd} owner The owner
+     */
     constructor(owner) {
         this.owner = owner;
     }

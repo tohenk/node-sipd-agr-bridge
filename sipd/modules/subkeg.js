@@ -26,12 +26,18 @@ const fs = require('fs');
 const { glob } = require('glob');
 const path = require('path');
 const Queue = require('@ntlab/work/queue');
+const Sipd = require('..');
 const SipdAgr = require('./agr');
 const SipdUtil = require('../util');
 const debug = require('debug')('sipdagr:subkeg');
 
 class SipdSubkeg {
 
+    /**
+     * Constructor.
+     *
+     * @param {Sipd} owner The owner
+     */
     constructor(owner) {
         this.owner = owner;
         this.agr = new SipdAgr();

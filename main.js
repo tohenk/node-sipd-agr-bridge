@@ -33,7 +33,7 @@ if (!Cmd.parse() || (Cmd.get('help') && usage())) {
 }
 
 (function run() {
-    new App(__dirname).run();
+    new App(process.cwd()).run();
 })();
 
 function usage() {

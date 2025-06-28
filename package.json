@@ -1,6 +1,6 @@
 {
   "name": "@ntlab/sipd-agr",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "SIPD RI Kemendagri Automation is a web automation using Selenium to help manage data such as budgeting download",
   "main": "main.js",
   "author": "Toha <tohenk@yahoo.com>",

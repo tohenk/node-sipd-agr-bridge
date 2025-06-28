@@ -58,7 +58,7 @@ class Configuration {
         for (const a of ['url', 'username', 'password', 'year', 'dir']) {
             const v = Cmd.get(a);
             if (v) {
-                this.config[a] = v;
+                this[a] = v;
             }
         }
         if (fs.existsSync(filename)) {

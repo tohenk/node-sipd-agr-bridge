@@ -44,6 +44,16 @@ Cmd.addBool('help', '', 'Show program usage', false);
  */
 class Configuration {
 
+    defaults = {
+        mode: Sipd.DOWNLOAD,
+        url: 'https://sipd-ri.kemendagri.go.id',
+        year: new Date().getFullYear(),
+        username: null,
+        password: null,
+        dir: null,
+        skipDownload: ['no-download', false],
+    }
+
     /**
      * Constructor.
      *
@@ -55,25 +65,13 @@ class Configuration {
         if (fs.existsSync(filename)) {
             Object.assign(this, this.getConfig(filename));
         }
-        for (const a of ['url', 'username', 'password', 'year', 'dir']) {
-            const v = Cmd.get(a);
-            if (v) {
-                this[a] = v;
-            }
-        }
         if (fs.existsSync(filename)) {
             console.log('Configuration loaded from %s', filename);
         }
         if (!this.workdir) {
             this.workdir = rootDir;
         }
-        if (Cmd.get('no-download')) {
-            this.skipDownload = Cmd.get('no-download');
-        }
-        if (!this.mode) {
-            this.mode = Cmd.get('mode') ? Cmd.get('mode') : Sipd.DOWNLOAD;
-        }
-
+        this.checkDefaults();
         if (!this.username || !this.password) {
             console.log('Both username or password must be supplied!');
             return;
@@ -101,6 +99,22 @@ class Configuration {
             }
         }
         this.initialized = true;
+    }
+
+    checkDefaults() {
+        for (const [k, v] of Object.entries(this.defaults)) {
+            const opt = Array.isArray(v) ? v[0] : k;
+            const defval = Array.isArray(v) ? v[1] : v;
+            // get value from command options
+            let value = Cmd.get(opt);
+            // fallback to default
+            if (value === null) {
+                value = defval;
+            }
+            if (value !== undefined && value !== null) {
+                this[k] = value;
+            }
+        }
     }
 
     getConfig(filename) {

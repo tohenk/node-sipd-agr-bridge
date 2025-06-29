@@ -27,6 +27,7 @@ const Queue = require('@ntlab/work/queue');
 const SipdApp = require('./modules/app');
 const SipdSubkeg = require('./modules/subkeg');
 const SipdRefs = require('./modules/refs');
+const { By, error } = require('selenium-webdriver');
 const debug = require('debug')('sipdagr:core');
 
 class Sipd extends WebRobot {
@@ -45,6 +46,7 @@ class Sipd extends WebRobot {
         this.app = new SipdApp(this);
         this.subkeg = new SipdSubkeg(this);
         this.refs = new SipdRefs(this);
+        super.constructor.expectErr(error.StaleElementReferenceError);
     }
 
     getWorks() {
@@ -197,19 +199,28 @@ class Sipd extends WebRobot {
         }
         return new Promise((resolve, reject) => {
             let el, presence = false;
+            let target;
+            if (data.data instanceof By) {
+                target = data.data.value;
+            } else if (data instanceof By) {
+                target = data.value;
+            } else {
+                target = data;
+            }
             const t = Date.now();
             const f = () => {
                 this.works([
-                    [w => this.findElements(data)],
+                    [w => this.isStale(data.el), w => data.el],
+                    [w => this.findElements(data), w => !w.getRes(0)],
                     [w => new Promise((resolve, reject) => {
                         let wait = true;
                         if (options.mode === this.WAIT_GONE && presence && w.res.length === 0) {
-                            debug(`element now is gone: ${data}`);
+                            debug(`element ${target} now is gone`);
                             el = w.res[0];
                             wait = false;
                         }
                         if (options.mode === this.WAIT_PRESENCE && !presence && w.res.length === 1) {
-                            debug(`element now is presence: ${data}`);
+                            debug(`element ${target} now is presence`);
                             el = w.res[0];
                             wait = false;
                         }
@@ -221,17 +232,25 @@ class Sipd extends WebRobot {
                             wait = false;
                         }
                         resolve(wait);
-                    })],
+                    }), w => !w.getRes(0)],
+                    [w => Promise.resolve(false), w => w.getRes(0)],
                 ])
                 .then(result => {
                     if (result) {
-                        debug(`still waiting for ${options.mode === this.WAIT_GONE ? 'gone' : 'presence'}: ${data}`);
-                        setTimeout(f, !presence ? 250 : 500);
+                        debug(`still waiting ${target} to be ${options.mode === this.WAIT_GONE ? 'gone' : 'presence'}`);
+                        setTimeout(f, 50);
                     } else {
                         resolve(el);
                     }
                 })
-                .catch(err => reject(err));
+                .catch(err => {
+                    if (err instanceof error.StaleElementReferenceError) {
+                        debug(`stale on ${target}, resolving instead`);
+                        resolve(el);
+                    } else {
+                        reject(err);
+                    }
+                });
             }
             f();
         });

@@ -150,9 +150,9 @@ class SipdApp {
 
     showMessage(title, message) {
         if (this.owner._url) {
-            this.owner.getDriver().executeScript(SipdScript.bootstrapModal(title, message));
+            return this.owner.getDriver().executeScript(SipdScript.bootstrapModal(title, message));
         } else {
-            console.log(message);
+            return Promise.resolve(console.log(message));
         }
     }
 }

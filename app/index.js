@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-const Cmd = require('@ntlab/ntlib/cmd');
 const Configuration = require('./configuration');
 const Sipd = require('../sipd');
 
@@ -66,22 +65,29 @@ class App {
         }
         const works = sipd.getWorks();
         if (works) {
+            const done = (err, message) => {
+                if (err) {
+                    console.error(err);
+                }
+                if (this.config.autoClose) {
+                    return sipd.close();
+                } else {
+                    if (message) {
+                        return sipd.app.showMessage('Information', message);
+                    } else {
+                        return Promise.resolve();
+                    }
+                }
+            }
             sipd.works(works, {
                 callback(next) {
                     setTimeout(() => next(), 500);
                 }
             })
-            .then(() => {
-                sipd.app.showMessage('Information', 'The process has been completed! :)');
-                console.log('Done');
-            })
+            .then(() => done(null, 'The process has been completed! :)'))
             .catch(err => {
                 process.exitCode = 2;
-                if (err) {
-                    console.error(err);
-                } else {
-                    console.error('Unknown error, aborting!!!');
-                }
+                done(err ?? 'Unknown error, aborting!!!');
             });
         } else {
             process.exitCode = 1;

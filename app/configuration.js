@@ -35,6 +35,7 @@ Cmd.addVar('password', 'p', 'Set password', 'password');
 Cmd.addVar('year', 'y', 'Set year', 'year');
 Cmd.addVar('dir', 'd', 'Set input or output directory', 'filename-or-folder');
 Cmd.addBool('no-download', '', 'Do not download from SIPD instead use previously downloaded files', false);
+Cmd.addBool('clean', '', 'Clean profile directory');
 Cmd.addBool('help', '', 'Show program usage', false);
 
 /**

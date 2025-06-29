@@ -66,20 +66,26 @@ class App {
         }
         const works = sipd.getWorks();
         if (works) {
-            sipd.works(works, next => {
-                setTimeout(() => next(), 500);
-            }).then(() => {
+            sipd.works(works, {
+                callback(next) {
+                    setTimeout(() => next(), 500);
+                }
+            })
+            .then(() => {
                 sipd.app.showMessage('Information', 'The process has been completed! :)');
                 console.log('Done');
-            }).catch(err => {
+            })
+            .catch(err => {
+                process.exitCode = 2;
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                 } else {
-                    console.log('Unknown error, aborting!!!');
+                    console.error('Unknown error, aborting!!!');
                 }
             });
         } else {
-            console.log('Unknown MODE %s!!!', this.config.mode);
+            process.exitCode = 1;
+            console.error('Unknown mode %s!!!', this.config.mode);
         }
     }
 

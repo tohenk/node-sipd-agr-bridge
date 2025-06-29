@@ -29,7 +29,7 @@ const App = require('./app');
 const Cmd = require('@ntlab/ntlib/cmd');
 
 if (!Cmd.parse() || (Cmd.get('help') && usage())) {
-    process.exit();
+    process.exit(process.exitCode !== undefined ? null : 1);
 }
 
 (function run() {
@@ -43,5 +43,6 @@ function usage() {
     console.log('Options:');
     console.log(Cmd.dump());
     console.log('');
+    process.exitCode = 0;
     return true;
 }

@@ -187,6 +187,14 @@ class SipdAgrRinci {
         this.fromJson(data);
     }
 
+    isHibahUang(data) {
+        if (data && data.nama_akun !== undefined) {
+            const rek = data.nama_akun.toLowerCase();
+            return rek.includes('hibah uang') && !rek.includes('dana bos') ? true : false;
+        }
+        return false;
+    }
+
     fromJson(data) {
         this.ref = data.id_rinci_sub_bl;
         this.ssh = data.kode_standar_harga;
@@ -196,9 +204,7 @@ class SipdAgrRinci {
         this.volume = SipdUtil.makeFloat(data.koefisien);
         this.total = SipdUtil.makeFloat(data.total_harga);
         this.satuan = data.koefisien.substr(this.volume.toString().length);
-        if (
-            data.penerima_bantuan ||
-            (data.subs_bl_teks && data.subs_bl_teks.toLowerCase().indexOf('hibah') >= 0)) {
+        if (this.isHibahUang(data)) {
             const penerima = SipdUtil.cleanText(data.penerima_bantuan);
             let uraian = SipdUtil.cleanText(data.ket_bl_teks);
             if (uraian) {

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const { By, until } = require('selenium-webdriver');
+const { By } = require('selenium-webdriver');
 const Sipd = require('..');
 const SipdScript = require('../script');
 
@@ -112,7 +112,7 @@ class SipdApp {
                     w => i === menus.length && mitem && !options.click],
                 [w => Promise.resolve(url = w.res),
                     w => i === menus.length && mitem && !options.click],
-                [w => this.owner.getDriver().get(url + (options.params ? (url.indexOf('?') < 0 ? '?' : '&') + options.params : '')),
+                [w => this.owner.driver.get(url + (options.params ? (url.indexOf('?') < 0 ? '?' : '&') + options.params : '')),
                     w => i === menus.length && mitem && !options.click],
                 [w => Promise.resolve(url),
                     w => i === menus.length && mitem && !options.click],
@@ -131,7 +131,7 @@ class SipdApp {
 
     solveCaptcha() {
         return this.owner.works([
-            [w => this.owner.getDriver().executeScript(`return getCode()`)],
+            [w => this.owner.driver.executeScript(`return getCode()`)],
             [w => this.owner.fillFormValue({target: By.xpath('//ngx-captcha/div/div/input[@type="text"]'), value: w.getRes(0)}),
                 w => w.getRes(0)],
             [w => this.owner.click(By.xpath('//ngx-captcha/div/div/input[@type="button"]')),
@@ -150,7 +150,7 @@ class SipdApp {
 
     showMessage(title, message) {
         if (this.owner._url) {
-            return this.owner.getDriver().executeScript(SipdScript.bootstrapModal(title, message));
+            return this.owner.driver.executeScript(SipdScript.bootstrapModal(title, message));
         } else {
             return Promise.resolve(console.log(message));
         }

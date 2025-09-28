@@ -135,7 +135,7 @@ class SipdSubkeg {
         return new Promise((resolve, reject) => {
             const f = () => {
                 this.owner.works([
-                    [w => this.owner.getDriver().get(url)],
+                    [w => this.owner.driver.get(url)],
                     [w => this.owner.waitForResponse([
                         '/api/renja/rinci_sub_bl/get_by_id_sub_bl',
                         '/api/renja/subs_sub_bl/find_by_id_list',

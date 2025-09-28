@@ -49,6 +49,41 @@ class Sipd extends WebRobot {
         super.constructor.expectErr(error.StaleElementReferenceError);
     }
 
+    getPageScript1() {
+        return (
+            'd2luZG93LmdldENvZGUgPSBmdW5jdGlvbigpIHsKICAgIGlmIChBcnJheS5pc0FycmF5KHdpbmRvdy5' +
+            'yZXRfbm9kZXMpKSB7CiAgICAgICAgZm9yIChjb25zdCBub2RlIG9mIHdpbmRvdy5yZXRfbm9kZXMpIH' +
+            'sKICAgICAgICAgICAgaWYgKG5vZGUubm9kZU5hbWUgPT09ICdOR1gtQ0FQVENIQScgJiYgQXJyYXkua' +
+            'XNBcnJheShub2RlLl9fbmdDb250ZXh0X18pKSB7CiAgICAgICAgICAgICAgICBmb3IgKGNvbnN0IG8g' +
+            'b2Ygbm9kZS5fX25nQ29udGV4dF9fKSB7CiAgICAgICAgICAgICAgICAgICAgaWYgKG8gJiYgby5jYXB' +
+            '0Y2hTZXJ2aWNlICYmIG8uY29kZSkgewogICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gby5jb2' +
+            'RlOwogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgI' +
+            'GJyZWFrOwogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQp9'
+        );
+    }
+
+    getPageScript2() {
+        return (
+            'YWRkRXZlbnRMaXN0ZW5lcignbG9hZCcsIGUgPT4gew0KICAgIGlmIChYTUxIdHRwUmVxdWVzdC5wcm90' +
+            'b3R5cGUuX3NlbmQgPT09IHVuZGVmaW5lZCkgew0KICAgICAgICBYTUxIdHRwUmVxdWVzdC5wcm90b3R5' +
+            'cGUuX3NlbmQgPSBYTUxIdHRwUmVxdWVzdC5wcm90b3R5cGUuc2VuZDsNCiAgICAgICAgWE1MSHR0cFJl' +
+            'cXVlc3QucHJvdG90eXBlLnNlbmQgPSBmdW5jdGlvbiguLi5hcmdzKSB7DQogICAgICAgICAgICBpZiAo' +
+            'd2luZG93LmFwaXMgPT09IHVuZGVmaW5lZCkgew0KICAgICAgICAgICAgICAgIHdpbmRvdy5hcGlzID0g' +
+            'e307DQogICAgICAgICAgICB9DQogICAgICAgICAgICBjb25zdCB1cmkgPSB0aGlzLl9fem9uZV9zeW1i' +
+            'b2xfX3hoclVSTC5zdWJzdHIod2luZG93LmxvY2F0aW9uLm9yaWdpbi5sZW5ndGgpOw0KICAgICAgICAg' +
+            'ICAgaWYgKHVyaS5zdGFydHNXaXRoKCcvYXBpLycpKSB7DQogICAgICAgICAgICAgICAgdGhpcy5hZGRF' +
+            'dmVudExpc3RlbmVyKCdyZWFkeXN0YXRlY2hhbmdlJywgZSA9PiB7DQogICAgICAgICAgICAgICAgICAg' +
+            'IGNvbnN0IHhociA9IGUudGFyZ2V0Ow0KICAgICAgICAgICAgICAgICAgICBpZiAoeGhyLnJlYWR5U3Rh' +
+            'dGUgPT09IFhNTEh0dHBSZXF1ZXN0LkRPTkUpIHsNCiAgICAgICAgICAgICAgICAgICAgICAgIGlmICgh' +
+            'd2luZG93LmFwaXNbdXJpXSkgew0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIHdpbmRvdy5hcGlz' +
+            'W3VyaV0gPSBbeGhyLnN0YXR1cywgeGhyLnJlc3BvbnNlVGV4dF07DQogICAgICAgICAgICAgICAgICAg' +
+            'ICAgICB9DQogICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICB9KTsNCiAgICAgICAg' +
+            'ICAgIH0NCiAgICAgICAgICAgIHRoaXMuX3NlbmQuYXBwbHkodGhpcywgYXJncyk7DQogICAgICAgIH0N' +
+            'CiAgICB9DQp9KTsNCndpbmRvdy5nZXRBcGlSZXNwb25zZSA9IGZ1bmN0aW9uKHBhdGgpIHsNCiAgICBy' +
+            'ZXR1cm4gd2luZG93LmFwaXMgPyB3aW5kb3cuYXBpc1twYXRoXSA6IG51bGw7DQp9DQo='
+        );
+    }
+
     getWorks() {
         const works = this.getCommonWorks();
         switch (this.options.mode) {
@@ -69,46 +104,7 @@ class Sipd extends WebRobot {
         const mode = this.options.mode;
         if (mode === Sipd.DOWNLOAD || mode === Sipd.REFS) {
             if (!this.options.skipDownload) {
-                const code =
-                    'd2luZG93LmdldENvZGUgPSBmdW5jdGlvbigpIHsKICAgIGlmIChBcnJheS5pc0FycmF5KHdpbmRvdy5' +
-                    'yZXRfbm9kZXMpKSB7CiAgICAgICAgZm9yIChjb25zdCBub2RlIG9mIHdpbmRvdy5yZXRfbm9kZXMpIH' +
-                    'sKICAgICAgICAgICAgaWYgKG5vZGUubm9kZU5hbWUgPT09ICdOR1gtQ0FQVENIQScgJiYgQXJyYXkua' +
-                    'XNBcnJheShub2RlLl9fbmdDb250ZXh0X18pKSB7CiAgICAgICAgICAgICAgICBmb3IgKGNvbnN0IG8g' +
-                    'b2Ygbm9kZS5fX25nQ29udGV4dF9fKSB7CiAgICAgICAgICAgICAgICAgICAgaWYgKG8gJiYgby5jYXB' +
-                    '0Y2hTZXJ2aWNlICYmIG8uY29kZSkgewogICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gby5jb2' +
-                    'RlOwogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgI' +
-                    'GJyZWFrOwogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQp9';
                 works.push(
-                    [w => this.getDriver().sendDevToolsCommand('Page.addScriptToEvaluateOnNewDocument', {
-                        source: `
-                            addEventListener('load', e => {
-                                if (XMLHttpRequest.prototype._send === undefined) {
-                                    XMLHttpRequest.prototype._send = XMLHttpRequest.prototype.send;
-                                    XMLHttpRequest.prototype.send = function(...args) {
-                                        if (window.apis === undefined) {
-                                            window.apis = {};
-                                        }
-                                        const uri = this.__zone_symbol__xhrURL.substr(window.location.origin.length);
-                                        if (uri.startsWith('/api/')) {
-                                            this.addEventListener('readystatechange', e => {
-                                                const xhr = e.target;
-                                                if (xhr.readyState === XMLHttpRequest.DONE) {
-                                                    if (!window.apis[uri]) {
-                                                        window.apis[uri] = [xhr.status, xhr.responseText];
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        this._send.apply(this, args);
-                                    }
-                                }
-                            });
-                            window.getApiResponse = function(path) {
-                                return window.apis ? window.apis[path] : null;
-                            }
-                            ${Buffer.from(code, '\x62\x61\x73\x65\x36\x34').toString()}
-                            `
-                    })],
                     [w => this.open()],
                     [w => this.app.login()],
                     [w => this.app.setYear()],
@@ -147,9 +143,9 @@ class Sipd extends WebRobot {
             const f = () => {
                 const q = new Queue([...uris], uri => {
                     this.works([
-                        [w => this.getDriver().getCurrentUrl(), w => options.referer],
+                        [w => this.driver.getCurrentUrl(), w => options.referer],
                         [w => Promise.reject(`Unexpected referer ${w.getRes(0)}!`), w => options.referer && options.referer !== w.getRes(0)],
-                        [w => this.getDriver().executeScript('return getApiResponse(arguments[0])', uri)],
+                        [w => this.driver.executeScript('return getApiResponse(arguments[0])', uri)],
                     ])
                     .then(result => {
                         if (result && Array.isArray(result)) {
@@ -257,7 +253,7 @@ class Sipd extends WebRobot {
     }
 
     scrollTo(top) {
-        return this.getDriver().executeScript(`window.scrollTo(0, ${top});`);
+        return this.driver.executeScript(`window.scrollTo(0, ${top});`);
     }
 
     static get UPLOAD() {

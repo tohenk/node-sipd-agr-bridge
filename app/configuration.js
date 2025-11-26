@@ -103,16 +103,23 @@ class Configuration {
     }
 
     checkDefaults() {
+        /**
+         * Option value priority (from higher to lower):
+         * 1. Command line argument
+         * 2. Configuration file
+         * 3. Default value
+         */
         for (const [k, v] of Object.entries(this.defaults)) {
             const opt = Array.isArray(v) ? v[0] : k;
             const defval = Array.isArray(v) ? v[1] : v;
-            // get value from command options
-            let value = Cmd.get(opt);
-            // fallback to default
-            if (value === null) {
-                value = defval;
+            // use value from configuration file or default value
+            let value = this[k] !== undefined ? this[k] : defval;
+            // override if command line argument exist
+            let optvalue = Cmd.get(opt);
+            if (optvalue !== undefined && optvalue !== null) {
+                value = optvalue;
             }
-            if (value !== undefined && value !== null) {
+            if (this[k] !== value) {
                 this[k] = value;
             }
         }

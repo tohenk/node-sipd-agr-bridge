@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2022-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -42,7 +42,7 @@ class SipdRef {
         return new Promise((resolve, reject) => {
             try {
                 const filename = path.join(outdir, `${this.name}.xlsx`);
-                console.log('Creating ref %s...', filename);
+                console.log(`Creating ref ${filename}...`);
                 const wb = new Excel.Workbook();
                 const sheet = wb.addWorksheet(this.name);
                 let row = 0;

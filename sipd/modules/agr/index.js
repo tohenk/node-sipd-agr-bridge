@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2022-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -38,7 +38,7 @@ class SipdAgr {
                 let kodeSubKeg = SipdUtil.cleanKode(metadata.kode_sub_giat);
                 let subkeg = this.getSubKeg(kodeSubKeg);
                 if (!subkeg) {
-                    subkeg = new SipdAgrSubKeg(kodeSubKeg, SipdUtil.cleanText(metadata.nama_sub_giat));
+                    subkeg = new SipdAgrSubKeg(kodeSubKeg, SipdUtil.normalizeText(metadata.nama_sub_giat));
                     this.items.push(subkeg);
                 }
                 subkeg.import(row, metadata);
@@ -50,7 +50,7 @@ class SipdAgr {
         return new Promise((resolve, reject) => {
             const q = new Queue(this.items, subkeg => {
                 const filename = path.join(outdir, subkeg.kode + '.xlsx');
-                console.log('Writing %s...', filename);
+                console.log(`Writing ${filename}...`);
                 const wb = new Excel.Workbook();
                 const sheet = wb.addWorksheet(subkeg.kode);
                 const writer = new SipdAgrWriter(sheet);
@@ -105,7 +105,7 @@ class SipdAgrSubKeg {
         this.kode_skpd = SipdUtil.cleanKode(data.kode_sub_skpd);
         this.nama_skpd = data.nama_sub_skpd;
         this.kode_keg = SipdUtil.cleanKode(data.kode_giat);
-        this.nama_keg = data.nama_giat;
+        this.nama_keg = SipdUtil.normalizeText(data.nama_giat);
     }
 
     getPek(pek) {

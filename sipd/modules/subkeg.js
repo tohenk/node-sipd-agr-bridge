@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2022-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -62,7 +62,7 @@ class SipdSubkeg {
                 const f = a => `${a.kode_sub_skpd}-${a.kode_sub_giat}`;
                 let items = w.getRes(1);
                 const filters = [];
-                // apply filter: unit, prog, keg, and subkeg (in dotted format)
+                // apply filter: unit, prog, keg, and subkeg
                 for (const opts of [
                     ['unit', 'kode_skpd', 'kode_sub_skpd'],
                     ['prog', 'kode_program'],
@@ -72,15 +72,36 @@ class SipdSubkeg {
                     const opt = opts.shift();
                     if (this.owner.options[opt]) {
                         filters.push(opt);
-                        const values = Array.isArray(this.owner.options[opt]) ? this.owner.options[opt] : [this.owner.options[opt]];
+                        /** @type {string[]} */
+                        const values = Array.isArray(this.owner.options[opt]) ?
+                            this.owner.options[opt] : [this.owner.options[opt]];
                         items = items.filter(a => {
-                            const datas = opts.map(k => a[k]);
-                            for (const v of values) {
+                            let res = false;
+                            const datas = opts.map(k => SipdUtil.cleanKode(a[k]));
+                            for (let v of values) {
+                                const exclude = v.startsWith('-');
+                                if (exclude) {
+                                    v = v.substr(1);
+                                }
+                                v = SipdUtil.cleanKode(v);
                                 if (datas.includes(v)) {
-                                    return true;
+                                    if (!exclude) {
+                                        res = true;
+                                    }
+                                    break;
+                                } else {
+                                    if (exclude) {
+                                        res = true;
+                                        break;
+                                    }
                                 }
                             }
-                            return false;
+                            if (!res) {
+                                const keg = a.kode_sub_giat;
+                                const title = SipdUtil.normalizeText(a.nama_sub_giat);
+                                debug(`${keg} - ${title} is skipped...`);
+                            }
+                            return res;
                         });
                     }
                 }
@@ -118,7 +139,7 @@ class SipdSubkeg {
         const maxretry = options.retry !== undefined ? options.retry : 10;
         const timeout = options.timeout !== undefined ? options.timeout : 30000;
         const keg = data.kode_sub_giat;
-        const title = data.nama_sub_giat
+        const title = SipdUtil.normalizeText(data.nama_sub_giat);
         const url = `${this.owner.url}/penganggaran/anggaran/cascading/rincian/sub-kegiatan/${data.id_sub_bl}`;
         const fname = SipdUtil.cleanKode(keg);
         outdir = path.join(outdir, data.kode_sub_skpd);
@@ -127,11 +148,10 @@ class SipdSubkeg {
         }
         if (this.skpd !== data.kode_sub_skpd) {
             this.skpd = data.kode_sub_skpd;
-            console.log('-- %s --', data.nama_sub_skpd);
+            console.log(`== ${this.skpd} - ${data.nama_sub_skpd} ==`);
         }
         let retry = maxretry;
-        const s = title.replace(/\n+/g, ' ');
-        console.log('Downloading %s...', s);
+        console.log(`Downloading ${keg} - ${title}...`);
         return new Promise((resolve, reject) => {
             const f = () => {
                 this.owner.works([
@@ -147,9 +167,9 @@ class SipdSubkeg {
                 ])
                 .then(res => resolve(res))
                 .catch(err => {
-                    debug('%s: %s', s, err);
+                    debug(`${s}: ${err}`);
                     if (--retry) {
-                        console.log('Downloading %s (retry %d of %d)...', s, maxretry - retry + 1, maxretry);
+                        console.log(`Downloading ${keg} - ${title} (retry ${maxretry - retry + 1} of ${maxretry})...`);
                         f();
                     } else {
                         reject(err);
@@ -201,7 +221,7 @@ class SipdSubkeg {
                     ;
                 });
                 q.once('done', () => {
-                    console.log('Done importing %d files...', count);
+                    console.log(`Done importing ${count} files...`);
                     resolve(count)
                 });
             })]

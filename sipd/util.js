@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2022-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -33,7 +33,7 @@ class SipdUtil {
                 text = this.decodeEntities(text);
                 text = this.cleanDup(text, '\'"');
             }
-            let stage = 0
+            let stage = 0;
             while (true) {
                 if (stage > 1) {
                     break;
@@ -136,6 +136,17 @@ class SipdUtil {
         if (s) {
             return s.toLowerCase().match(/(kota|kab(upaten)?|kec(amatan)?|desa|ds|kel(urahan)?)(\.)?\s/g);
         }
+    }
+
+    static normalizeText(s) {
+        if (typeof s === 'string') {
+            s = s
+                .replace(/(\r\n)+/g, ' ')
+                .replace(/\n+/g, ' ')
+                .replace(/\r+/g, ' ')
+                .replace(/\s{2,}/g, ' ');
+        }
+        return s;
     }
 
     static get cleanses() {

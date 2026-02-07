@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2022-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -140,6 +140,7 @@ class Sipd extends WebRobot {
                 }
                 return res;
             }
+            const timer = new SipdTimer();
             const f = () => {
                 const q = new Queue([...uris], uri => {
                     this.works([
@@ -175,7 +176,7 @@ class Sipd extends WebRobot {
                         if (options.timeout > 0 && Date.now() - t > options.timeout) {
                             reject(`Wait response timed-out for ${pending}!`);
                         } else {
-                            debug('Still waiting response for', pending);
+                            timer.check(t => debug(`Still waiting response for ${pending} after ${t.deltaTime}s...`));
                             setTimeout(f, 100);
                         }
                     }
@@ -203,6 +204,7 @@ class Sipd extends WebRobot {
             } else {
                 target = data;
             }
+            const timer = new SipdTimer();
             const t = Date.now();
             const f = () => {
                 this.works([
@@ -233,7 +235,7 @@ class Sipd extends WebRobot {
                 ])
                 .then(result => {
                     if (result) {
-                        debug(`still waiting ${target} to be ${options.mode === this.WAIT_GONE ? 'gone' : 'presence'}`);
+                        timer.check(() => debug(`still waiting ${target} to be ${options.mode === this.WAIT_GONE ? 'gone' : 'presence'}`));
                         setTimeout(f, 50);
                     } else {
                         resolve(el);
@@ -266,6 +268,35 @@ class Sipd extends WebRobot {
 
     static get REFS() {
         return 'refs';
+    }
+}
+
+/**
+ * Execute callback for every second delta time.
+ *
+ * @author Toha <tohenk@yahoo.com>
+ */
+class SipdTimer
+{
+    constructor(options) {
+        this.options = options || {};
+        this.lastTime;
+        this.startTime = new Date().getTime();
+        this.delta = this.options.delta || 5;
+    }
+
+    check(callback) {
+        this.deltaTime = Math.floor((new Date().getTime() - this.startTime) / 1000);
+        if (
+            this.deltaTime > 0 &&
+            this.deltaTime % this.delta === 0 &&
+            (this.lastTime === undefined || this.lastTime < this.deltaTime)
+        ) {
+            this.lastTime = this.deltaTime;
+            if (typeof callback === 'function') {
+                callback(this);
+            }
+        }
     }
 }
 

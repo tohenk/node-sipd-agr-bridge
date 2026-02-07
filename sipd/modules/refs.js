@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2022-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -81,7 +81,7 @@ class SipdRefs {
     }
 
     downloadFromPage(outdir, data, page = 1, count = 1000) {
-        console.log('Downloading file %s...', data.name);
+        console.log(`Downloading file ${data.name}...`);
         return new Promise((resolve, reject) => {
             const items = [];
             const f = () => {

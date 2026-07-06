@@ -167,7 +167,7 @@ class SipdSubkeg {
                 ])
                 .then(res => resolve(res))
                 .catch(err => {
-                    debug(`${s}: ${err}`);
+                    debug(`${keg} - ${title}: ${err}`);
                     if (--retry) {
                         console.log(`Downloading ${keg} - ${title} (retry ${maxretry - retry + 1} of ${maxretry})...`);
                         f();

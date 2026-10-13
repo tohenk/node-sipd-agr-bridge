@@ -25,7 +25,7 @@
 const fs = require('fs');
 const path = require('path');
 const Cmd = require('@ntlab/ntlib/cmd');
-const Sipd = require('../sipd');
+const Sipd = require('./sipd');
 
 Cmd.addVar('config', 'c', 'Set configuration file', 'filename');
 Cmd.addVar('mode', '', 'Processing mode, can be download or upload', 'mode');

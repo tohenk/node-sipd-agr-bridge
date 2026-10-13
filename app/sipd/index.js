@@ -27,6 +27,7 @@ const Queue = require('@ntlab/work/queue');
 const SipdApp = require('./modules/app');
 const SipdSubkeg = require('./modules/subkeg');
 const SipdRefs = require('./modules/refs');
+const SipdTimer = require('./timer');
 const { By, error } = require('selenium-webdriver');
 const debug = require('debug')('sipdagr:core');
 
@@ -268,35 +269,6 @@ class Sipd extends WebRobot {
 
     static get REFS() {
         return 'refs';
-    }
-}
-
-/**
- * Execute callback for every second delta time.
- *
- * @author Toha <tohenk@yahoo.com>
- */
-class SipdTimer
-{
-    constructor(options) {
-        this.options = options || {};
-        this.lastTime;
-        this.startTime = new Date().getTime();
-        this.delta = this.options.delta || 5;
-    }
-
-    check(callback) {
-        this.deltaTime = Math.floor((new Date().getTime() - this.startTime) / 1000);
-        if (
-            this.deltaTime > 0 &&
-            this.deltaTime % this.delta === 0 &&
-            (this.lastTime === undefined || this.lastTime < this.deltaTime)
-        ) {
-            this.lastTime = this.deltaTime;
-            if (typeof callback === 'function') {
-                callback(this);
-            }
-        }
     }
 }
 

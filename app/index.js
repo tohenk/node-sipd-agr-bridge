@@ -23,7 +23,7 @@
  */
 
 const Configuration = require('./configuration');
-const Sipd = require('../sipd');
+const Sipd = require('./sipd');
 
 /**
  * Main application entry point.

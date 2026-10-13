@@ -24,8 +24,8 @@
 
 class SipdScript {
 
-    static bootstrapModal(title, message, button = 'Oke') {
-        let id = 'x-modal-' + parseInt(Math.random() * 1000000 + 1);
+    static bootstrapModal(title, message) {
+        const id = 'x-modal-' + parseInt(Math.random() * 1000000 + 1);
         return `
 $(document.body).append(\`
 <ngb-modal-window id="${id}" class="d-block modal fade show" tabindex="-1" role="dialog">

@@ -43,7 +43,7 @@ class SipdApp {
             [w => w.getRes(0)[0].getRect(), w => w.getRes(0).length],
             [w => this.owner.scrollTo(w.getRes(1).y), w => w.getRes(0).length],
             [w => this.owner.fillInForm([
-                    {target: By.id('prov-autocomplete'), value: this.owner.provinsi, onfill: (el, value) => {
+                    {target: By.id('prov-autocomplete'), label: 'Province', value: this.owner.provinsi, onfill: (el, value) => {
                         return this.owner.works([
                             [x => el.sendKeys(value)],
                             [x => this.owner.sleep(this.owner.opdelay)],
@@ -51,8 +51,8 @@ class SipdApp {
                             [x => x.getRes(2).click()],
                         ]);
                     }},
-                    {target: By.name('email'), value: this.owner.username},
-                    {target: By.name('password'), value: this.owner.password},
+                    {target: By.name('email'), label: 'Username', value: this.owner.username},
+                    {target: By.name('password'), label: 'Password', value: this.owner.password},
                 ],
                 By.xpath('//form[@id="kt_login_signin_form"]'),
                 By.xpath('//button[@type="submit"]')
@@ -66,7 +66,8 @@ class SipdApp {
     setYear() {
         return this.owner.works([
             [w => this.owner.findElements(By.xpath('//app-tahun-anggaran-list'))],
-            [w => this.owner.fillInForm([{target: By.xpath('//select[@formcontrolname="tahun"]'), value: this.owner.year}],
+            [w => this.owner.fillInForm(
+                [{target: By.xpath('//select[@formcontrolname="tahun"]'), label: 'Budgeting Year', value: this.owner.year}],
                 By.xpath('//form[contains(@class,"form")]'),
                 By.xpath('//button[@type="submit"]')
             ), w => w.getRes(0).length],
